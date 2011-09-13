@@ -1,0 +1,8 @@
+*
+!.gitignore
+!.vimrc
+!.xmonad
+!.xmonad/xmonad.hs
+!.xmonad/conkyrc
+!.xmonad/icons
+!.xmonad/icons/*
