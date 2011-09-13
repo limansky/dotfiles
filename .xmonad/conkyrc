@@ -1,0 +1,17 @@
+out_to_console yes
+out_to_x no
+update_interval 1
+
+TEXT
+${if_running mpd}\
+^i($HOME/.xmonad/icons/mpd.xbm) ${mpd_artist} - ${mpd_album} - ${mpd_title}\
+${if_match "$mpd_status" == "Paused"} (paused)${endif}\
+${endif} \
+^p(_CENTER) \
+${if_match $cpu >= 75}^fg(\#ef5919)\
+${else}${if_match $cpu >= 20}^fg(\#dfdf59)\
+${else}^fg(\#87af87)\
+${endif}${endif}\
+^i($HOME/.xmonad/icons/cpu.xbm)${cpu}% \
+^fg(\#87af87)^i($HOME/.xmonad/icons/mem.xbm)${memperc}% \
+^fg(orange)${time %A}, ${time %d} ${time %B}, ${time %H}:${time %M}:${time %S} ^fg(\orange)
