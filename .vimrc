@@ -1,0 +1,16 @@
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+colorscheme 256-jungle
+set autowrite
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set smarttab
+set smartindent
+set number
+set ruler
+set t_Co=256
+set ignorecase
+set incsearch
+set switchbuf=useopen,usetab,newtab
+set foldmethod=syntax
+set ls=2
