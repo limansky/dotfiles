@@ -14,7 +14,7 @@ import qualified XMonad.StackSet as W
 import System.Exit
 import XMonad.Prompt.Shell
 import XMonad.Prompt
-import XMonad.Util.Run (safeSpawnProg)
+import XMonad.Util.Run (safeSpawn)
 
 -------------------------------------------------------------------------------
 -- Main --
@@ -147,7 +147,7 @@ myKeysToAdd =
     , ((myModMask,               xK_z     ), spawn "ncmpcpp prev")
     , ((myModMask,               xK_r     ), shellPrompt myXPConfig)
     , ((myModMask,               xK_u     ), focusUrgent)
-    , ((controlMask .|. altMask, xK_l     ), safeSpawnProg "xlock")
+    , ((controlMask .|. altMask, xK_l     ), safeSpawn "xautolock" ["-locknow"])
     ]
         where altMask = mod1Mask
 
@@ -155,4 +155,4 @@ myKeysToAdd =
 toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
-myStartup = spawn "feh --bg-tile /home/mlimansk/.xmonad/theme.jpg"
+myStartup = spawn "feh --bg-tile /home/mlimansk/.xmonad/theme.jpg" >> spawn "xautolock -time 10"
