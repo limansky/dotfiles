@@ -2,6 +2,7 @@
 !.gitignore
 !.vimrc
 !.Xdefaults
+!.zshrc
 !.xmonad
 !.xmonad/xmonad.hs
 !.xmonad/conkyrc
