@@ -6,6 +6,7 @@ urxvt.font:             xft:Monospace:style=Regular:pixelsize=12:antialias=true
 urxvt.boldFont:         xft:Monospace:style=Bold:pixelsize=12:antialias=true
 URxvt*shading:          20
 URxvt*fading:           10
+urxvt.depth:            24
 
 # colors
 URxvt.background:       #1d1d1d
