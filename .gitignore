@@ -8,3 +8,5 @@
 !.xmonad/conkyrc
 !.xmonad/icons
 !.xmonad/icons/*
+!.vimperatorrc
+!.mutt/vimrc
