@@ -10,5 +10,6 @@
 !.xmonad/icons
 !.xmonad/icons/*
 !.vimperatorrc
+!.muttrc
 !.mutt
 !.mutt/vimrc
