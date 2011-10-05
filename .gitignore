@@ -6,6 +6,7 @@
 !.xmonad
 !.xmonad/xmonad.hs
 !.xmonad/conkyrc
+!.xmonad/calendar.sh
 !.xmonad/theme.jpg
 !.xmonad/icons
 !.xmonad/icons/*

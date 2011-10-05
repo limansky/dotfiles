@@ -14,4 +14,4 @@ ${else}^fg(\#87af87)\
 ${endif}${endif}\
 ^i($HOME/.xmonad/icons/cpu.xbm)${cpu}% \
 ^fg(\#87af87)^i($HOME/.xmonad/icons/mem.xbm)${memperc}% \
-^fg(orange)${time %A}, ${time %d} ${time %B}, ${time %H}:${time %M}:${time %S} ^fg(\orange)
+^fg(orange)^ca(1,$HOME/.xmonad/calendar.sh)${time %A}, ${time %d} ${time %B}, ${time %H}:${time %M}:${time %S} ^ca()^fg()
