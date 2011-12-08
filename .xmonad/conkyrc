@@ -8,6 +8,10 @@ ${if_running mpd}\
 ${if_match "$mpd_status" == "Paused"} (paused)${endif}\
 ${endif} \
 ^p(_CENTER) \
+${if_match "${acpiacadapter}" == "on-line"}^i($HOME/.xmonad/icons/ac.xbm)\
+${else}^i($HOME/.xmonad/icons/bat.xbm)\
+${endif}\
+${battery_percent}% \
 ${if_match $cpu >= 75}^fg(\#ef5919)\
 ${else}${if_match $cpu >= 20}^fg(\#dfdf59)\
 ${else}^fg(\#87af87)\
