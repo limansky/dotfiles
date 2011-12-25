@@ -64,7 +64,7 @@ myXPConfig = defaultXPConfig { fgColor = barFgColor
 -- Looks --
 -- bar
 
-myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-12-*-*-*-*-*-*-u'"
+myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-12-*-*-*-*-*-*-u'" ++ " -e ''"
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
