@@ -10,6 +10,7 @@
 !.xmonad/theme.jpg
 !.xmonad/icons
 !.xmonad/icons/*
+!.xmonad/blinker.pl
 !.vimperatorrc
 !.muttrc
 !.mutt

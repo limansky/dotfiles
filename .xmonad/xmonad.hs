@@ -25,7 +25,8 @@ main = do
     xmonad =<< statusBar cmd pp kb conf
       where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
+        cmd = "/home/mlimansk/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
+        -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
         conf = ewmh $ uhook myConfig
@@ -66,7 +67,8 @@ myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
-              , ppUrgent = dzenColor barFgColor "dark red" . dzenStrip
+              , ppUrgent = (\s -> "^blink(1)" ++ (dzenColor barFgColor "dark red" $ dzenStrip s) ++ "^blink(0)")
+              --, ppUrgent = dzenColor barFgColor "dark red" . dzenStrip
               , ppHiddenNoWindows = dzenColor "#333333" "" . pad
               , ppTitle = dzenColor "#87af87" "" . shorten 200
               , ppSep = " "
