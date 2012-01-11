@@ -45,9 +45,11 @@ myConfig = defaultConfig { workspaces = myWorkspaces
                          } `removeKeys` myKeysToRemove 
                            `additionalKeys` myKeysToAdd
 
+myUserName = "limansky"
+
 -- Bars, etc
 myTrayCommand = "killall stalonetray ; stalonetray -i 16 --max-width 48 --icon-gravity E --geometry 48x16-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=/home/mlimansk/.xmonad/conkyrc | dzen2 -x 1280 -w 1232 -ta r " ++ myDzenOptions
+myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -ta r " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
@@ -63,7 +65,7 @@ myXPConfig = defaultXPConfig { fgColor = barFgColor
 -- Looks --
 -- bar
 
-myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-12-*-*-*-*-*-*-u'"
+myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-12-*-*-*-*-*-*-u'" ++ " -e ''"
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
@@ -82,7 +84,7 @@ myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
                         _ -> x
                     )
               }
-    where wrapIcon pic = "^i(/home/mlimansk/.xmonad/icons/" ++ pic ++ ")"
+    where wrapIcon pic = "^i(/home/" ++ myUserName ++ "/.xmonad/icons/" ++ pic ++ ")"
 
 -- workspaces
 myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail", "8", "9:music" ]
@@ -157,4 +159,4 @@ myKeysToAdd =
 toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
-myStartup = spawn "feh --bg-tile /home/mlimansk/.xmonad/theme.jpg" >> spawn "xautolock -time 10"
+myStartup = spawn ("feh --bg-tile /home/" ++ myUserName ++ "/.xmonad/theme.jpg") >> spawn "xautolock -time 10"
