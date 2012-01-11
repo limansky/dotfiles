@@ -27,7 +27,7 @@ mime_lookup application/octet-stream
 
 set beep_new=yes
 set date_format="%a, %b %d %H:%M"
-set index_format="%4C %Z %D %-16.16L  %s"
+set index_format="%4C %Z %D %-16.16L  %s %* %c"
 
 set sort=threads
 set sort_aux=reverse-last-date-received
