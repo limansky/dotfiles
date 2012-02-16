@@ -25,7 +25,7 @@ main = do
     xmonad =<< statusBar cmd pp kb conf
       where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = "/home/mlimansk/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
+        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
         -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
