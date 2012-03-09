@@ -29,6 +29,8 @@ bindkey "^[[7~" beginning-of-line
 bindkey "^[[8~" end-of-line
 bindkey "^[[3~" delete-char
 
+export EDITOR=/usr/bin/vim
+
 #aliases
 alias ls='ls --color=auto'
 alias harm_X='Xephyr :1 -host-cursor -screen 864x480x16 -dpi 96 -ac +extension Composite'
