@@ -15,3 +15,6 @@
 !.muttrc
 !.mutt
 !.mutt/vimrc
+!.config
+!.config/mc
+!.config/mc/ini
