@@ -132,11 +132,11 @@ clipboard_paste=
 
 
 [Colors]
-base_color=normal=default,default:selected=black,lightgray:marked=yellow,default:header=yellow,default
+base_color=normal=default,default:selected=black,lightgray:marked=yellow,default:header=yellow,default:bbarbutton=black,lightgray:bbarhotkey=red,lightgray;bold:statusbar=black,lightgray:menunormal=black,lightgray:menuhot=red,ligthgray:menusel=black,green:menuhotsel=red,green,menuinactive=yellow,red
 linux=
 color_terminals=
 
-rxvt-unicode-256color=
+rxvt-unicode-256color=bbarhotkey=color160,lightgray;bold:menuhot=color160,lightgray:menuhotsel=color160,green
 
 [Panels]
 kilobyte_si=false
