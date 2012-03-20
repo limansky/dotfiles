@@ -92,7 +92,7 @@ permission_mode=0
 quick_search_case_sensitive=2
 ignore_ftp_chattr_errors=true
 keymap=mc.keymap
-skin=default
+skin=mydark256
 
 filepos_max_saved_entries=1024
 
@@ -132,11 +132,11 @@ clipboard_paste=
 
 
 [Colors]
-base_color=normal=default,default:selected=black,lightgray:marked=yellow,default:header=yellow,default:bbarbutton=black,lightgray:bbarhotkey=red,lightgray;bold:statusbar=black,lightgray:menunormal=black,lightgray:menuhot=red,ligthgray:menusel=black,green:menuhotsel=red,green,menuinactive=yellow,red
+base_color=
 linux=
 color_terminals=
 
-rxvt-unicode-256color=bbarhotkey=color160,lightgray;bold:menuhot=color160,lightgray:menuhotsel=color160,green
+rxvt-unicode-256color=
 
 [Panels]
 kilobyte_si=false
