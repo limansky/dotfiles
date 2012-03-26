@@ -18,3 +18,8 @@
 !.config
 !.config/mc
 !.config/mc/ini
+!.local/
+!.local/share/
+!.local/share/mc
+!.local/share/mc/skins
+!.local/share/mc/skins/mydark256.ini
