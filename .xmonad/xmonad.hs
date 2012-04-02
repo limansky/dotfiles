@@ -1,20 +1,31 @@
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.ManageDocks (manageDocks, avoidStruts, ToggleStruts(..))
+
 import XMonad.Util.EZConfig
+import XMonad.Util.Run (safeSpawn, spawnPipe, hPutStrLn)
+import XMonad.Util.NamedWindows (getName)
+
 import XMonad.Actions.CycleWS
+
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
 import XMonad.Layout.NoBorders
+
 import qualified XMonad.StackSet as W
+
 import System.Exit
 import XMonad.Prompt.Shell
 import XMonad.Prompt
-import XMonad.Util.Run (safeSpawn)
+
+import Data.List (sortBy, intercalate)
+import Data.Maybe (isJust, catMaybes)
+import Data.Ord (comparing)
+import Control.Monad (zipWithM_)
+import Codec.Binary.UTF8.String (encodeString)
 
 -------------------------------------------------------------------------------
 -- Main --
@@ -22,34 +33,34 @@ main :: IO ()
 main = do 
     spawn myTrayCommand
     spawn myInfoBar
-    xmonad =<< statusBar cmd pp kb conf
+    dzenl <- spawnPipe $ cmd ++ " -w 1280"
+    dzenr <- spawnPipe $ cmd ++ " -x 1280 -w 1232"
+    xmonad $ uhook $ myConfig { logHook = myLogHook [ myPP { ppOutput = hPutStrLn dzenl }
+                                                    , myPP { ppOutput = hPutStrLn dzenr }
+                                                    ] }
       where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
-        -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
-        pp = myPP
-        kb = toggleStrutsKey
-        conf = ewmh $ uhook myConfig
+--        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
+        cmd = "dzen2 -ta l " ++ myDzenOptions
 
 -------------------------------------------------------------------------------
 -- Configs --
 myConfig = defaultConfig { workspaces = myWorkspaces
                          , modMask    = myModMask
                          , terminal   = myTerminal
-                         , logHook    = ewmhDesktopsLogHook >> myLogHook
-                         , manageHook = myManageHook <+> manageHook defaultConfig
-                         , layoutHook = myLayout
+                         , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
+                         , layoutHook = avoidStruts myLayout
                          , startupHook = myStartup
                          , normalBorderColor = myNormalBorderColor
                          , focusedBorderColor = myFocusedBorderColor
                          } `removeKeys` myKeysToRemove 
                            `additionalKeys` myKeysToAdd
 
-myUserName = "limansky"
+myUserName = "mlimansk"
 
 -- Bars, etc
 myTrayCommand = "killall stalonetray ; stalonetray -i 16 --max-width 48 --icon-gravity E --geometry 48x16-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -ta r " ++ myDzenOptions
+myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -ta r -w 1280 " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
@@ -69,8 +80,9 @@ myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
-              , ppUrgent = (\s -> "^blink(1)" ++ (dzenColor barFgColor "dark red" $ dzenStrip s) ++ "^blink(0)")
-              --, ppUrgent = dzenColor barFgColor "dark red" . dzenStrip
+              , ppVisible = dzenColor barFgColor "#2d2d2d" . pad
+              --, ppUrgent = (\s -> "^blink(1)" ++ (dzenColor barFgColor "dark red" $ dzenStrip s) ++ "^blink(0)")
+              , ppUrgent = dzenColor barFgColor "dark red" . dzenStrip
               , ppHiddenNoWindows = dzenColor "#333333" "" . pad
               , ppTitle = dzenColor "#87af87" "" . shorten 200
               , ppSep = " "
@@ -93,8 +105,6 @@ myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail
 -- Terminal --
 myTerminal = "urxvt"
 
-myLogHook = (dynamicLogWithPP $ myPP) >> fadeInactiveLogHook 0.8
-
 myManageHook = composeAll [
         className =? "stalonetray"      --> doIgnore,
         className =? "Firefox"          --> doShift "2:web",
@@ -105,8 +115,6 @@ myManageHook = composeAll [
     ]
 
 -- Layouting
-
---myLayout = ewmhDesktopsLayout . dwmStyle shrinkText myTheme . windowNavigation . avoidStruts . maximize . mkToggle (single ACCORDION) . mkToggle (NOBORDERS ?? FULL ?? EOT) $ onWorkspace "IM" tiledIM (Mirror tiled) ||| onWorkspace "IM" (Mirror tiled) tiledIM
 
 defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
   where
@@ -126,7 +134,7 @@ myLayout = onWorkspace "4:im" qutimLayout $ onWorkspace "5:skype" skypeLayout $ 
     where skypeLayout = reflectHoriz $ withIM (1/6) skypeRoster Grid
           skypeRoster = (ClassName "Skype") `And` (Not (Title "Options")) `And` (Not (Role "Chats")) `And` (Not (Role "CallWindowForm"))
           qutimLayout = reflectHoriz $ withIM (1/7) qutimRoster Grid
-          qutimRoster = (ClassName "Qutim") `And` (Role "contactlist")
+          qutimRoster = (ClassName "Pidgin") `And` (Role "buddy_list")
           --qutimRoster = Role "contactlist"
 
 ------------------------------------------------------------------------
@@ -143,8 +151,7 @@ myKeysToAdd =
     , ((myModMask,               xK_Left  ), prevWS)
     , ((myModMask,               xK_Right ), nextWS)
 
-    --, ((myModMask,               xK_r     ), spawn $ "exe=`dmenu_path | dmenu -nb '" ++ barBgColor ++ "' -nf '" ++ barFgColor ++ "'` && eval \"exec $exe\"")
---    , ((myModMask,               xK_f     ), sendMessage ToggleStruts)
+    , ((myModMask,               xK_f     ), sendMessage ToggleStruts)
     -- MPD keys
     , ((myModMask,               xK_c     ), spawn "ncmpcpp toggle")
     , ((myModMask,               xK_b     ), spawn "ncmpcpp next")
@@ -159,6 +166,62 @@ myKeysToAdd =
 toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
-myStartup = spawn ("feh --bg-tile /home/" ++ myUserName ++ "/.xmonad/theme.jpg") >>
-            spawn "xautolock -time 10" >>
-            spawn "tinymount --iconTheme=Tango"
+myStartup = spawn ("feh --bg-tile /home/" ++ myUserName ++ "/.xmonad/theme.jpg")
+            >> spawn "xautolock -time 10"
+            >> spawn "tinymount --iconTheme=Tango"
+
+myLogHook pps = do
+  screens <- (sortBy (comparing W.screen) . W.screens) `fmap` gets windowset
+  zipWithM_ dynamicLogWithPP' screens pps
+
+-- Extract the focused window from the stack of windows on the given screen.
+-- Return Just that window, or Nothing for an empty stack.
+focusedWindow = maybe Nothing (return . W.focus) . W.stack . W.workspace
+
+-- The functions dynamicLogWithPP', dynamicLogString', and pprWindowSet' below
+-- are similar to their undashed versions, with the difference being that the
+-- latter operate on the current screen, whereas the former take the screen to
+-- operate on as the first argument.
+
+dynamicLogWithPP' screen pp = dynamicLogString' screen pp >>= io . ppOutput pp
+
+dynamicLogString' screen pp = do
+
+  winset <- gets windowset
+  urgents <- readUrgents
+  sort' <- ppSort pp
+
+  -- layout description
+  let ld = description . W.layout . W.workspace $ screen
+
+  -- workspace list
+  let ws = pprWindowSet' screen sort' urgents pp winset
+
+  -- window title
+  wt <- maybe (return "") (fmap show . getName) $ focusedWindow screen
+
+  -- run extra loggers, ignoring any that generate errorW.
+  extras <- mapM (`catchX` return Nothing) $ ppExtras pp
+
+  return $ encodeString . sepBy (ppSep pp) . ppOrder pp $
+             [ ws
+             , ppLayout pp ld
+             , ppTitle pp wt
+             ]
+             ++ catMaybes extras
+
+
+pprWindowSet' screen sort' urgents pp s = sepBy (ppWsSep pp) . map fmt . sort' $ W.workspaces s
+    where this = W.tag . W.workspace $ screen
+          visibles = map (W.tag . W.workspace) (W.current s : W.visible s)
+
+          fmt w = printer pp (W.tag w)
+              where printer | W.tag w == this = ppCurrent
+                            | W.tag w `elem` visibles = ppVisible
+                            | any (\x -> maybe False (== W.tag w) (W.findTag x s)) urgents = \ppC -> ppUrgent ppC . ppHidden ppC
+                            | isJust (W.stack w) = ppHidden
+                            | otherwise = ppHiddenNoWindows
+
+
+sepBy :: String -> [String] -> String
+sepBy sep = intercalate sep . filter (not . null)
