@@ -7,6 +7,9 @@ urxvt.boldFont:         xft:Monospace:style=Bold:pixelsize=12:antialias=true
 URxvt*shading:          20
 URxvt*fading:           10
 urxvt.depth:            24
+URxvt*scrollTtyOutput:      false
+URxvt*scrollWithBuffer:     true
+URxvt*scrollTtyKeypress:    true
 
 # colors
 URxvt.background:       #1d1d1d
