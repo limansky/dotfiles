@@ -25,7 +25,7 @@ main = do
     xmonad =<< statusBar cmd pp kb conf
       where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1280 " ++ myDzenOptions
+        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1232 " ++ myDzenOptions
         -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
@@ -48,8 +48,8 @@ myConfig = defaultConfig { workspaces = myWorkspaces
 myUserName = "limansky"
 
 -- Bars, etc
-myTrayCommand = "killall stalonetray ; stalonetray -i 16 --max-width 48 --icon-gravity E --geometry 48x16-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -ta r " ++ myDzenOptions
+myTrayCommand = "killall stalonetray ; stalonetray -i 16 --icon-gravity SE --geometry 3x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
+myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -w 1280 -ta r " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
