@@ -1,7 +1,7 @@
 URxvt*urgentOnBell:     true
 URxvt.scrollBar:        false
 URxvt.perl-ext-common:  default,matcher,tabbed
-URxvt.urlLauncher:      firefox
+URxvt.url-launcher:     /usr/bin/firefox
 urxvt.font:             xft:Monospace:style=Regular:pixelsize=12:antialias=true
 urxvt.boldFont:         xft:Monospace:style=Bold:pixelsize=12:antialias=true
 URxvt*shading:          20
