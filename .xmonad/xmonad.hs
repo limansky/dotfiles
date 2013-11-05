@@ -99,7 +99,7 @@ myManageHook = composeAll [
         className =? "stalonetray"      --> doIgnore,
         className =? "Firefox"          --> doShift "2:web",
         className =? "Skype"            --> doShift "5:skype",
-        className =? "Qutim"            --> doShift "4:im",
+        className =? "Pidgin"           --> doShift "4:im",
         className =? "Gimp"             --> doFloat,
         className =? "MPlayer"          --> doFloat
     ]
@@ -122,11 +122,11 @@ defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBord
        -- Percent of screen to increment by when resizing panes
        delta   = 3/100
 
-myLayout = onWorkspace "4:im" qutimLayout $ onWorkspace "5:skype" skypeLayout $ defaultLayouts
+myLayout = onWorkspace "4:im" pidginLayout $ onWorkspace "5:skype" skypeLayout $ defaultLayouts
     where skypeLayout = reflectHoriz $ withIM (1/6) skypeRoster Grid
           skypeRoster = (ClassName "Skype") `And` (Not (Title "Options")) `And` (Not (Role "Chats")) `And` (Not (Role "CallWindowForm"))
-          qutimLayout = reflectHoriz $ withIM (1/7) qutimRoster Grid
-          qutimRoster = (ClassName "Qutim") `And` (Role "contactlist")
+          pidginLayout = reflectHoriz $ withIM (1/7) pidginRoster Grid
+          pidginRoster = (ClassName "Pidgin") `And` (Role "buddy_list")
           --qutimRoster = Role "contactlist"
 
 ------------------------------------------------------------------------
