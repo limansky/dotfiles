@@ -3,6 +3,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.ManageHelpers
 import XMonad.Util.EZConfig
 import XMonad.Actions.CycleWS
 import XMonad.Layout.PerWorkspace
@@ -101,7 +102,8 @@ myManageHook = composeAll [
         className =? "Skype"            --> doShift "5:skype",
         className =? "Pidgin"           --> doShift "4:im",
         className =? "Gimp"             --> doFloat,
-        className =? "MPlayer"          --> doFloat
+        className =? "MPlayer"          --> doFloat,
+        isFullscreen                    --> doFullFloat
     ]
 
 -- Layouting
