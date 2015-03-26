@@ -24,6 +24,8 @@ set certificate_file=~/.mutt/certificates
 
 set mime_forward=ask-no
 mime_lookup application/octet-stream
+auto_view text/html
+alternative_order text/plain text/enriched text/html
 
 set beep_new=yes
 set date_format="%a, %b %d %H:%M"
