@@ -26,7 +26,7 @@ main = do
     xmonad =<< statusBar cmd pp kb conf
       where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = "/home/" ++ myUserName ++ "/.xmonad/blinker.pl | dzen2 -ta l -w 1232 " ++ myDzenOptions
+        cmd = xmonadHome ++ "blinker.pl | dzen2 -ta l -w 2512 " ++ myDzenOptions
         -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
@@ -34,23 +34,25 @@ main = do
 
 -------------------------------------------------------------------------------
 -- Configs --
-myConfig = defaultConfig { workspaces = myWorkspaces
-                         , modMask    = myModMask
-                         , terminal   = myTerminal
-                         , logHook    = ewmhDesktopsLogHook >> myLogHook
-                         , manageHook = myManageHook <+> manageHook defaultConfig
-                         , layoutHook = myLayout
-                         , startupHook = myStartup
-                         , normalBorderColor = myNormalBorderColor
-                         , focusedBorderColor = myFocusedBorderColor
-                         } `removeKeys` myKeysToRemove 
-                           `additionalKeys` myKeysToAdd
+myConfig = def { workspaces = myWorkspaces
+               , modMask    = myModMask
+               , terminal   = myTerminal
+               , logHook    = ewmhDesktopsLogHook >> myLogHook
+               , manageHook = myManageHook <+> manageHook defaultConfig
+               , layoutHook = myLayout
+               , startupHook = myStartup >> setWMName "LG3D"
+               , normalBorderColor = myNormalBorderColor
+               , focusedBorderColor = myFocusedBorderColor
+               } `removeKeys` myKeysToRemove
+                 `additionalKeys` myKeysToAdd
 
 myUserName = "limansky"
+myUserHome = "/home/" ++ myUserName ++ "/"
+xmonadHome = myUserHome ++ ".xmonad/"
 
 -- Bars, etc
-myTrayCommand = "killall stalonetray ; stalonetray -i 16 --icon-gravity SE --geometry 3x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=/home/" ++ myUserName ++ "/.xmonad/conkyrc | dzen2 -y -1 -w 1280 -ta r " ++ myDzenOptions
+myTrayCommand = "killall stalonetray ; stalonetray -i 24 --icon-gravity SE --geometry 3x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
+myInfoBar = "killall conky ; conky --config=" ++ xmonadHome ++ "conkyrc | dzen2 -x -1328 -w 1256 -ta r " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
@@ -85,7 +87,7 @@ myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
                         _ -> x
                     )
               }
-    where wrapIcon pic = "^i(/home/" ++ myUserName ++ "/.xmonad/icons/" ++ pic ++ ")"
+    where wrapIcon pic = "^i(" ++ xmonadHome ++ "icons/" ++ pic ++ ")"
 
 -- workspaces
 myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail", "8", "9:music" ]
