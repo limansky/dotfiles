@@ -17,6 +17,10 @@ import XMonad.Prompt.Shell
 import XMonad.Prompt
 import XMonad.Util.Run (safeSpawn)
 
+import Data.Time.Clock
+import Data.Time.Calendar
+import Data.Time.LocalTime
+
 -------------------------------------------------------------------------------
 -- Main --
 main :: IO ()
@@ -163,6 +167,16 @@ myKeysToAdd =
 toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
-myStartup = spawn ("feh --bg-tile /home/" ++ myUserName ++ "/.xmonad/theme.jpg") >>
+myStartup = io setWallpaper >>
             spawn "xautolock -time 10" >>
             spawn "tinymount --iconTheme=Tango"
+
+setWallpaper = do
+    now <- getCurrentTime
+    timezone <- getCurrentTimeZone
+    let zoneNow = utcToLocalTime timezone now
+    let (_, month, _) = toGregorian $ localDay zoneNow
+    let filename = (showFixed month) ++ ".jpg"
+    spawn ("feh --bg-scale " ++ xmonadHome ++ "wallpaper/" ++ filename)
+
+showFixed n = if n < 10 then "0" ++ show n else show n
