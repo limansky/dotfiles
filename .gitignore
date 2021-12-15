@@ -16,6 +16,7 @@
 !.mutt
 !.mutt/vimrc
 !.config
+!.config/kitty/kitty.conf
 !.config/mc
 !.config/mc/ini
 !.local/
