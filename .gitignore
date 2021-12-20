@@ -1,4 +1,5 @@
 *
+!*/
 !.gitignore
 !.vimrc
 !.Xdefaults
@@ -16,7 +17,11 @@
 !.mutt
 !.mutt/vimrc
 !.config
+!.config/kitty/
 !.config/kitty/kitty.conf
+!.config/nvim/*
+!.config/nvim/lua/user/*
+!.config/nvim/lua/user/lsp/*
 !.config/mc
 !.config/mc/ini
 !.local/
