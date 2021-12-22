@@ -9,9 +9,13 @@ return require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim', requires = { {'nvim-lua/plenary.nvim'} } }
 
   -- languages
-  use 'lervag/vimtex'
+  -- use 'lervag/vimtex'
+
+  -- Treesitter
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
   use 'numToStr/Comment.nvim'
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
 
   -- LSP
   use 'neovim/nvim-lspconfig' -- enable LSP

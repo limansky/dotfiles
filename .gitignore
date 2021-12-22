@@ -22,6 +22,7 @@
 !.config/nvim/*
 !.config/nvim/lua/user/*
 !.config/nvim/lua/user/lsp/*
+!.config/nvim/lua/user/lsp/settings/*
 !.config/mc
 !.config/mc/ini
 !.local/
