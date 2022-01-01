@@ -6,10 +6,15 @@ return require('packer').startup(function(use)
   use { 'nvim-lualine/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true} }
   use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons'}
   use { 'kyazdani42/nvim-tree.lua', requires = { 'kyazdani42/nvim-web-devicons' } }
-  use { 'nvim-telescope/telescope.nvim', requires = { {'nvim-lua/plenary.nvim'} } }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'folke/trouble.nvim', requires = { 'kyazdani42/nvim-web-devicons' } }
+
+  -- typing
+  use({ "windwp/nvim-autopairs" })
 
   -- languages
   -- use 'lervag/vimtex'
+  use {'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim" }}
 
   -- Treesitter
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }

@@ -12,6 +12,10 @@ vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.undofile = true -- persistent undo to default location
 vim.opt.background = 'dark'
+vim.opt.scrolloff = 5
+vim.opt.list = true
+vim.opt.listchars = 'tab:▸ ,trail:·,nbsp:+'
+vim.opt_global.shortmess:remove("F")
 
 -- vim.opt.switchbuf=useopen,usetab,newtab
 -- vim.opt.ls = 2
