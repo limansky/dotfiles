@@ -4,6 +4,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Util.EZConfig
 import XMonad.Actions.CycleWS
 import XMonad.Layout.PerWorkspace
@@ -38,11 +39,12 @@ main = do
 
 -------------------------------------------------------------------------------
 -- Configs --
-myConfig = def { workspaces = myWorkspaces
+myConfig = ewmhFullscreen . ewmh $ def { workspaces = myWorkspaces
                , modMask    = myModMask
                , terminal   = myTerminal
-               , logHook    = ewmhDesktopsLogHook >> myLogHook
-               , manageHook = myManageHook <+> manageHook defaultConfig
+               , logHook    = myLogHook
+               , manageHook = myManageHook <+> manageHook def
+               , handleEventHook = handleEventHook def
                , layoutHook = myLayout
                , startupHook = myStartup >> setWMName "LG3D"
                , normalBorderColor = myNormalBorderColor
@@ -64,9 +66,11 @@ barFgColor = "#AFAF87"
 myNormalBorderColor = "#222222"
 myFocusedBorderColor = "#666666"
 
-myXPConfig = defaultXPConfig { fgColor = barFgColor
-                             , bgColor = barBgColor
-                             }
+myXPConfig = def { font = "xft:Monospace:size=8"
+                 , fgColor = barFgColor
+                 , bgColor = barBgColor
+                 , height  = 32
+                 }
 
 -------------------------------------------------------------------------------
 -- Looks --
@@ -94,19 +98,21 @@ myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
     where wrapIcon pic = "^i(" ++ xmonadHome ++ "icons/" ++ pic ++ ")"
 
 -- workspaces
-myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail", "8", "9:music" ]
+myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:slack", "7:mail", "8", "9:music" ]
 
 -------------------------------------------------------------------------------
 -- Terminal --
-myTerminal = "urxvt"
+myTerminal = "kitty"
 
 myLogHook = (dynamicLogWithPP $ myPP) >> fadeInactiveLogHook 0.8
 
 myManageHook = composeAll [
         className =? "stalonetray"      --> doIgnore,
         className =? "Firefox"          --> doShift "2:web",
+        className =? "jetbrains-idea-ce"--> doShift "3:work",
+        className =? "TelegramDesktop"  --> doShift "4:im",
         className =? "Skype"            --> doShift "5:skype",
-        className =? "Pidgin"           --> doShift "4:im",
+        className =? "Slack"            --> doShift "6:slack",
         className =? "Gimp"             --> doFloat,
         className =? "MPlayer"          --> doFloat,
         isFullscreen                    --> doFullFloat
@@ -116,26 +122,18 @@ myManageHook = composeAll [
 
 --myLayout = ewmhDesktopsLayout . dwmStyle shrinkText myTheme . windowNavigation . avoidStruts . maximize . mkToggle (single ACCORDION) . mkToggle (NOBORDERS ?? FULL ?? EOT) $ onWorkspace "IM" tiledIM (Mirror tiled) ||| onWorkspace "IM" (Mirror tiled) tiledIM
 
-defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
-  where
-       -- default tiling algorithm partitions the screen into two panes
-       tiled   = Tall nmaster delta ratio
 
-       -- The default number of windows in the master pane
-       nmaster = 1
-
-       -- Default proportion of screen occupied by master pane
-       ratio   = 1/2
-
-       -- Percent of screen to increment by when resizing panes
-       delta   = 3/100
-
-myLayout = onWorkspace "4:im" pidginLayout $ onWorkspace "5:skype" skypeLayout $ defaultLayouts
-    where skypeLayout = reflectHoriz $ withIM (1/6) skypeRoster Grid
-          skypeRoster = (ClassName "Skype") `And` (Not (Title "Options")) `And` (Not (Role "Chats")) `And` (Not (Role "CallWindowForm"))
-          pidginLayout = reflectHoriz $ withIM (1/7) pidginRoster Grid
-          pidginRoster = (ClassName "Pidgin") `And` (Role "buddy_list")
-          --qutimRoster = Role "contactlist"
+myLayout = onWorkspace "4:im" fsLayout $ onWorkspace "5:skype" fsLayout $ onWorkspace "2:web" fsLayout $ defaultLayouts
+    where defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
+          fsLayout = noBorders Full ||| smartBorders tiled ||| smartBorders ( Mirror tiled )
+          -- default tiling algorithm partitions the screen into two panes
+          tiled   = Tall nmaster delta ratio
+          -- The default number of windows in the master pane
+          nmaster = 1
+          -- Default proportion of screen occupied by master pane
+          ratio   = 1/2
+          -- Percent of screen to increment by when resizing panes
+          delta   = 3/100
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
