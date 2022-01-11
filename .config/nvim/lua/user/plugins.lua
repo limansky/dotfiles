@@ -34,5 +34,6 @@ return require('packer').startup(function(use)
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
   -- colorschemes
-  use 'doums/darcula'
+  -- use 'doums/darcula'
+  use 'rebelot/kanagawa.nvim'
 end)
