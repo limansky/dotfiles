@@ -8,6 +8,7 @@ vim.opt.smartindent = true
 vim.opt.number = true
 vim.opt.ruler = true
 vim.opt.termguicolors = true -- Set colors from scheme
+vim.opt.cursorline = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.undofile = true -- persistent undo to default location

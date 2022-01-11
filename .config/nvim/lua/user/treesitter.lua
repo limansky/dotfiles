@@ -1,10 +1,16 @@
-require'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup {
   context_commentstring = {
     enable = true,
     enable_autocmd = false,
   },
   highlight = {
     enable = true,
-    disable = { "scala" }
+    disable = { 'scala' }
+  },
+  autopairs = {
+    enable = true,
+  },
+  autotag = {
+    enable = true,
   }
 }
