@@ -17,6 +17,7 @@ import System.Exit
 import XMonad.Prompt.Shell
 import XMonad.Prompt
 import XMonad.Util.Run (safeSpawn)
+import Graphics.X11.ExtraTypes.XF86
 
 import Data.Time.Clock
 import Data.Time.Calendar
@@ -25,26 +26,27 @@ import Data.Time.LocalTime
 -------------------------------------------------------------------------------
 -- Main --
 main :: IO ()
-main = do 
+main = do
     spawn myTrayCommand
     spawn myInfoBar
     xmonad =<< statusBar cmd pp kb conf
-      where 
+      where
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = xmonadHome ++ "blinker.pl | dzen2 -ta l -w 2512 " ++ myDzenOptions
+        cmd = xmonadHome ++ "blinker.pl | dzen2 -ta l -w 1130 " ++ myDzenOptions
+        -- cmd = "polybar"
         -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
-        conf = ewmh $ uhook myConfig
+        -- conf = ewmhFullscreen . ewmh $ myConfig
+        conf = ewmhFullscreen . ewmh $ uhook myConfig
 
 -------------------------------------------------------------------------------
 -- Configs --
-myConfig = ewmhFullscreen . ewmh $ def { workspaces = myWorkspaces
+myConfig = def { workspaces = myWorkspaces
                , modMask    = myModMask
                , terminal   = myTerminal
                , logHook    = myLogHook
                , manageHook = myManageHook <+> manageHook def
-               , handleEventHook = handleEventHook def
                , layoutHook = myLayout
                , startupHook = myStartup >> setWMName "LG3D"
                , normalBorderColor = myNormalBorderColor
@@ -57,8 +59,8 @@ myUserHome = "/home/" ++ myUserName ++ "/"
 xmonadHome = myUserHome ++ ".xmonad/"
 
 -- Bars, etc
-myTrayCommand = "killall stalonetray ; stalonetray -i 24 --icon-gravity SE --geometry 3x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=" ++ xmonadHome ++ "conkyrc | dzen2 -x -1328 -w 1256 -ta r " ++ myDzenOptions
+myTrayCommand = "killall stalonetray ; stalonetray -i 24 --icon-gravity SE --geometry 5x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
+myInfoBar = "killall conky ; conky --config=" ++ xmonadHome ++ "conkyrc | dzen2 -x -790 -w 670 -ta r " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
@@ -76,7 +78,7 @@ myXPConfig = def { font = "xft:Monospace:size=8"
 -- Looks --
 -- bar
 
-myDzenOptions = "-h 16 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-12-*-*-*-*-*-*-u'" ++ " -e ''"
+myDzenOptions = "-h 24 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-14-*-*-*-*-*-*-u'" ++ " -e ''"
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
@@ -98,7 +100,7 @@ myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
     where wrapIcon pic = "^i(" ++ xmonadHome ++ "icons/" ++ pic ++ ")"
 
 -- workspaces
-myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:slack", "7:mail", "8", "9:music" ]
+myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail", "8", "9:music" ]
 
 -------------------------------------------------------------------------------
 -- Terminal --
@@ -110,9 +112,9 @@ myManageHook = composeAll [
         className =? "stalonetray"      --> doIgnore,
         className =? "Firefox"          --> doShift "2:web",
         className =? "jetbrains-idea-ce"--> doShift "3:work",
-        className =? "TelegramDesktop"  --> doShift "4:im",
+        className =? "TelegramDesktop"         --> doShift "4:im",
         className =? "Skype"            --> doShift "5:skype",
-        className =? "Slack"            --> doShift "6:slack",
+        className =? "Slack"            --> doShift "6:IRC",
         className =? "Gimp"             --> doFloat,
         className =? "MPlayer"          --> doFloat,
         isFullscreen                    --> doFullFloat
@@ -122,18 +124,22 @@ myManageHook = composeAll [
 
 --myLayout = ewmhDesktopsLayout . dwmStyle shrinkText myTheme . windowNavigation . avoidStruts . maximize . mkToggle (single ACCORDION) . mkToggle (NOBORDERS ?? FULL ?? EOT) $ onWorkspace "IM" tiledIM (Mirror tiled) ||| onWorkspace "IM" (Mirror tiled) tiledIM
 
+defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
+  where
+       -- default tiling algorithm partitions the screen into two panes
+       tiled   = Tall nmaster delta ratio
 
-myLayout = onWorkspace "4:im" fsLayout $ onWorkspace "5:skype" fsLayout $ onWorkspace "2:web" fsLayout $ defaultLayouts
-    where defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
-          fsLayout = noBorders Full ||| smartBorders tiled ||| smartBorders ( Mirror tiled )
-          -- default tiling algorithm partitions the screen into two panes
-          tiled   = Tall nmaster delta ratio
-          -- The default number of windows in the master pane
-          nmaster = 1
-          -- Default proportion of screen occupied by master pane
-          ratio   = 1/2
-          -- Percent of screen to increment by when resizing panes
-          delta   = 3/100
+       -- The default number of windows in the master pane
+       nmaster = 1
+
+       -- Default proportion of screen occupied by master pane
+       ratio   = 1/2
+
+       -- Percent of screen to increment by when resizing panes
+       delta   = 3/100
+
+myLayout = onWorkspace "4:im" fsLayout $ onWorkspace "5:skype" fsLayout $ defaultLayouts
+    where fsLayout     = noBorders Full
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -153,11 +159,13 @@ myKeysToAdd =
 --    , ((myModMask,               xK_f     ), sendMessage ToggleStruts)
     -- MPD keys
     , ((myModMask,               xK_c     ), spawn "ncmpcpp toggle")
-    , ((myModMask,               xK_b     ), spawn "ncmpcpp next")
-    , ((myModMask,               xK_z     ), spawn "ncmpcpp prev")
+    , ((0,         xF86XK_AudioMute       ), spawn "pactl set-sink-mute 0 toggle")
+    , ((0,         xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +5%")
+    , ((0,         xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -5%")
     , ((myModMask,               xK_r     ), shellPrompt myXPConfig)
     , ((myModMask,               xK_u     ), focusUrgent)
     , ((controlMask .|. altMask, xK_l     ), safeSpawn "xautolock" ["-locknow"])
+    , ((0,                       xK_Print ), spawn "scrot -e 'xclip -selection clipboard -t image/png -i $f && rm $f")
     ]
         where altMask = mod1Mask
 
@@ -166,6 +174,7 @@ toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
 myStartup = io setWallpaper >>
+            spawn ("compton &") >>
             spawn "xautolock -time 10" >>
             spawn "tinymount --iconTheme=Tango"
 
