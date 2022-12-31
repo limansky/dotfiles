@@ -7,5 +7,6 @@ require('user.nvim-tree')
 require('user.comments')
 require('user.telescope')
 require('user.misc')
+require('user.luasnip')
 
 require('user.lsp')
