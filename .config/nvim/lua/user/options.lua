@@ -20,3 +20,10 @@ vim.opt_global.shortmess:remove("F")
 
 -- vim.opt.switchbuf=useopen,usetab,newtab
 -- vim.opt.ls = 2
+
+-- Clipboard config
+if vim.g.os_current == 'Darwin' then
+  vim.opt.clipboard = 'unnamed'
+else
+  vim.opt.clipboard = 'unnamedplus'
+end
