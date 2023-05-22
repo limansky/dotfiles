@@ -2,7 +2,9 @@ require('telescope').setup()
 
 local opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap('n', '<leader>fg', [[<cmd>lua require("telescope.builtin").live_grep()<CR>]], opts)
-vim.api.nvim_set_keymap('n', '<leader>ff', [[<cmd>lua require("telescope.builtin").find_files()<CR>]], opts)
-vim.api.nvim_set_keymap('n', '<leader>fh', [[<cmd>lua require("telescope.builtin").help_tags()<CR>]], opts)
-vim.api.nvim_set_keymap('n', '<leader>fc', [[<cmd>lua require("telescope.builtin").git_bcommits()<CR>]], opts)
+local tele = require('telescope.builtin')
+
+vim.keymap.set('n', '<leader>fg', tele.live_grep, opts)
+vim.keymap.set('n', '<leader>ff', tele.find_files, opts)
+vim.keymap.set('n', '<leader>fh', tele.help_tags, opts)
+vim.keymap.set('n', '<leader>fc', tele.git_bcommits, opts)
