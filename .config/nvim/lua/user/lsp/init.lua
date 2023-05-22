@@ -164,4 +164,4 @@ MetalsConfig.init_options.statusBarProvider = "on"
 MetalsConfig.capabilities = capabilities
 MetalsConfig.on_attach = on_attach
 
--- vim.cmd([[autocmd FileType scala,sbt,java lua require("metals").initialize_or_attach(MetalsConfig)]])
+vim.cmd([[autocmd FileType scala,sbt,java lua require("metals").initialize_or_attach(MetalsConfig)]])
