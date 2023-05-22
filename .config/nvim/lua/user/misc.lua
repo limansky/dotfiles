@@ -4,3 +4,4 @@ require('nvim-autopairs').setup {
 }
 
 require('trouble').setup {}
+require('nvim-web-devicons').setup {}
