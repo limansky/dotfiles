@@ -65,20 +65,37 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 vim.o.completeopt = 'menuone,noselect'
 
 -- LSP installer
-local lsp_installer = require("nvim-lsp-installer")
-lsp_installer.on_server_ready(function(server)
-  local opts = {
-    capabilities = capabilities,
-    on_attach = on_attach
-  }
+-- local lsp_installer = require("nvim-lsp-installer")
+-- lsp_installer.on_server_ready(function(server)
+--   local opts = {
+--     capabilities = capabilities,
+--     on_attach = on_attach
+--   }
+--
+--   if server.name == 'sumneko_lua' then
+--     local extra = require "user.lsp.settings.sumneko_lua"
+--     opts = vim.tbl_deep_extend("force", extra, opts)
+--   end
+--
+--   server:setup(opts)
+-- end)
 
-  if server.name == 'sumneko_lua' then
-    local extra = require "user.lsp.settings.sumneko_lua"
-    opts = vim.tbl_deep_extend("force", extra, opts)
-  end
+-- Mason
+require('mason').setup()
 
-  server:setup(opts)
-end)
+local mlc = require('mason-lspconfig')
+
+mlc.setup({
+  ensure_installed = { 'tsserver', 'lua_ls' }
+})
+
+local lspconfig = require('lspconfig')
+
+mlc.setup_handlers({
+  function(server_name)
+    lspconfig[server_name].setup({})
+  end,
+})
 
 local has_words_before = function()
   unpack = unpack or table.unpack
@@ -147,4 +164,4 @@ MetalsConfig.init_options.statusBarProvider = "on"
 MetalsConfig.capabilities = capabilities
 MetalsConfig.on_attach = on_attach
 
-vim.cmd([[autocmd FileType scala,sbt,java lua require("metals").initialize_or_attach(MetalsConfig)]])
+-- vim.cmd([[autocmd FileType scala,sbt,java lua require("metals").initialize_or_attach(MetalsConfig)]])

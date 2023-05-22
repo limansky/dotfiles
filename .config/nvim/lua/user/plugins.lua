@@ -38,8 +38,16 @@ return require('lazy').setup({
   'windwp/nvim-ts-autotag',
 
   -- LSP
-  'neovim/nvim-lspconfig', -- enable LSP
-  'williamboman/nvim-lsp-installer', -- install LSP servers
+  'williamboman/mason.nvim',
+  'williamboman/mason-lspconfig.nvim',
+  {
+    'neovim/nvim-lspconfig',
+    lazy = false,
+    dependencies = {
+      'mason.nvim',
+      'williamboman/mason-lspconfig.nvim'
+    }
+  }, -- enable LSP
   'hrsh7th/nvim-cmp', -- Autocompletion plugin
   'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
   'saadparwaiz1/cmp_luasnip', -- Snippets source for nvim-cmp
