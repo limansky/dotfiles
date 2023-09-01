@@ -9,10 +9,9 @@ local on_attach = function (_, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
@@ -93,7 +92,9 @@ local lspconfig = require('lspconfig')
 
 mlc.setup_handlers({
   function(server_name)
-    lspconfig[server_name].setup({})
+    lspconfig[server_name].setup({
+      on_attach = on_attach
+    })
   end,
 })
 
@@ -141,7 +142,7 @@ cmp.setup {
         elseif ls.jumpable(-1) then
           ls.jump(-1)
         else
-          falback()
+          fallback()
         end
       end,
       {'i', 's'}
