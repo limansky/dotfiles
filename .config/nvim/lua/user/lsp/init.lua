@@ -92,9 +92,11 @@ local lspconfig = require('lspconfig')
 
 mlc.setup_handlers({
   function(server_name)
-    lspconfig[server_name].setup({
+    local opts = {
+      capabilities = capabilities,
       on_attach = on_attach
-    })
+    }
+    lspconfig[server_name].setup(opts)
   end,
 })
 
