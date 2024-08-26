@@ -42,11 +42,12 @@ end
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics,
   {
+    signs = true,
     underline = true,
     virtual_text = {
       spacing = 5,
-      severity_limit = 'Warning',
     },
+    severity_limit = 'Warning',
     update_in_insert = true,
   }
 )
