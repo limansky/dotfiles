@@ -86,7 +86,7 @@ require('mason').setup()
 local mlc = require('mason-lspconfig')
 
 mlc.setup({
-  ensure_installed = { 'tsserver', 'lua_ls' }
+  ensure_installed = { 'ts_ls', 'lua_ls' }
 })
 
 local lspconfig = require('lspconfig')
