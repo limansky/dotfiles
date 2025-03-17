@@ -1,13 +1,15 @@
-out_to_console true
-out_to_x false
-update_interval 1
+conky.config = {
+  out_to_console = true,
+  out_to_x = false,
+  update_interval = 1,
+};
 
-TEXT
-${exec $HOME/.xmonad/layout.sh} \
-${if_match "${acpiacadapter}" == "on-line"}^i($HOME/.xmonad/icons/ac.xbm)\
-${else}^i($HOME/.xmonad/icons/bat.xbm)\
-${endif}\
-${battery_percent}% \
+conky.text = [[
+${if_running mpd}\
+^i($HOME/.xmonad/icons/mpd.xbm) ${mpd_artist} - ${mpd_album} - ${mpd_title}\
+${if_match "$mpd_status" == "Paused"} (paused)${endif}\
+${endif} \
+^p(_CENTER) \
 ${if_match $cpu >= 75}^fg(\#ef5919)\
 ${else}${if_match $cpu >= 20}^fg(\#dfdf59)\
 ${else}^fg(\#87af87)\
@@ -15,3 +17,4 @@ ${endif}${endif}\
 ^i($HOME/.xmonad/icons/cpu.xbm)${cpu}% \
 ^fg(\#87af87)^i($HOME/.xmonad/icons/mem.xbm)${memperc}% \
 ^fg(orange)^ca(1,$HOME/.xmonad/calendar.sh)${time %A}, ${time %d} ${time %B}, ${time %H}:${time %M}:${time %S} ^ca()^fg()
+]];
