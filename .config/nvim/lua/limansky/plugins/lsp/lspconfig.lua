@@ -6,10 +6,7 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true },
   },
   config = function()
-    local lspconfig = require('lspconfig')
-    local mason_lspconfig = require('mason-lspconfig')
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
-
 
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -38,24 +35,19 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    mason_lspconfig.setup_handlers({
-      function(server_name)
-        lspconfig[server_name].setup({
-          capabilities = capabilities
-        })
-      end,
-      ['lua_ls'] = function()
-        lspconfig['lua_ls'].setup({
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { 'vim' }
-              }
-            }
+    vim.lsp.config('*', {
+      capabilities = capabilities
+    })
+
+    vim.lsp.config('lua_ls', {
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { 'vim' }
           }
-        })
-      end
+        }
+      }
     })
   end
 }
