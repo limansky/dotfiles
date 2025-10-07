@@ -104,7 +104,7 @@ myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail
 
 -------------------------------------------------------------------------------
 -- Terminal --
-myTerminal = "kitty"
+myTerminal = "wezterm"
 
 myLogHook = (dynamicLogWithPP $ myPP) >> fadeInactiveLogHook 0.8
 
@@ -159,9 +159,9 @@ myKeysToAdd =
 --    , ((myModMask,               xK_f     ), sendMessage ToggleStruts)
     -- MPD keys
     , ((myModMask,               xK_c     ), spawn "ncmpcpp toggle")
-    , ((0,         xF86XK_AudioMute       ), spawn "pactl set-sink-mute 0 toggle")
-    , ((0,         xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +5%")
-    , ((0,         xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -5%")
+    , ((0,         xF86XK_AudioMute       ), spawn "wpctl set-mute @DEFAULT_SINK@ toggle")
+    , ((0,         xF86XK_AudioRaiseVolume), spawn "wpctl set-volume @DEFAULT_SINK@ 5%+ --limit 1.25")
+    , ((0,         xF86XK_AudioLowerVolume), spawn "wpctl set-volume @DEFAULT_SINK@ 5%-")
     , ((myModMask,               xK_r     ), shellPrompt myXPConfig)
     , ((myModMask,               xK_u     ), focusUrgent)
     , ((controlMask .|. altMask, xK_l     ), safeSpawn "xautolock" ["-locknow"])

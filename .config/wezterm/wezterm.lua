@@ -26,6 +26,7 @@ config.keys = {
   { key = 'f', mods = 'ALT|CTRL', action = act.Search('CurrentSelectionOrEmptyString')},
   { key = '=', mods = 'ALT|CTRL', action = act.IncreaseFontSize },
   { key = '-', mods = 'ALT|CTRL', action = act.DecreaseFontSize },
+  { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom('Clipboard') },
   { key = 'PageUp', mods = 'SHIFT', action = act.ScrollByPage(-1) },
   { key = 'PageDown', mods = 'SHIFT', action = act.ScrollByPage(1) },
 }
