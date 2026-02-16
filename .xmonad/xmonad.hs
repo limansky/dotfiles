@@ -4,6 +4,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.ManageDocks (avoidStruts, docks)
 import XMonad.Hooks.SetWMName
 import XMonad.Util.EZConfig
 import XMonad.Actions.CycleWS
@@ -27,26 +28,26 @@ import Data.Time.LocalTime
 -- Main --
 main :: IO ()
 main = do
+    spawn "gentoo-pipewire-launcher"
     spawn myTrayCommand
     spawn myInfoBar
     xmonad =<< statusBar cmd pp kb conf
-      where
+      where 
         uhook = withUrgencyHook NoUrgencyHook
-        cmd = xmonadHome ++ "blinker.pl | dzen2 -ta l -w 1130 " ++ myDzenOptions
-        -- cmd = "polybar"
+        cmd = xmonadHome ++ "blinker.pl | dzen2 -dock -ta l -w 2512 " ++ myDzenOptions
         -- cmd = "dzen2 -ta l -w 1280 " ++ myDzenOptions
         pp = myPP
         kb = toggleStrutsKey
-        -- conf = ewmhFullscreen . ewmh $ myConfig
-        conf = ewmhFullscreen . ewmh $ uhook myConfig
+        conf = ewmh $ uhook myConfig
 
 -------------------------------------------------------------------------------
 -- Configs --
-myConfig = def { workspaces = myWorkspaces
+myConfig = ewmhFullscreen . ewmh . docks $ def { workspaces = myWorkspaces
                , modMask    = myModMask
                , terminal   = myTerminal
                , logHook    = myLogHook
                , manageHook = myManageHook <+> manageHook def
+               , handleEventHook = handleEventHook def
                , layoutHook = myLayout
                , startupHook = myStartup >> setWMName "LG3D"
                , normalBorderColor = myNormalBorderColor
@@ -59,8 +60,8 @@ myUserHome = "/home/" ++ myUserName ++ "/"
 xmonadHome = myUserHome ++ ".xmonad/"
 
 -- Bars, etc
-myTrayCommand = "killall stalonetray ; stalonetray -i 24 --icon-gravity SE --geometry 5x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
-myInfoBar = "killall conky ; conky --config=" ++ xmonadHome ++ "conkyrc | dzen2 -x -790 -w 670 -ta r " ++ myDzenOptions
+myTrayCommand = "killall stalonetray ; stalonetray --dockapp-mode=simple -i 24 --icon-gravity SE --geometry 5x1-0+0 -bg '" ++ barBgColor ++ "' --sticky --skip-taskbar &"
+myInfoBar = "killall conky ; conky --config=" ++ xmonadHome ++ "conkyrc | dzen2 -dock -x -1328 -w 1208 -ta r " ++ myDzenOptions
 
 -- Colors --
 barBgColor = "#111111"
@@ -68,17 +69,17 @@ barFgColor = "#AFAF87"
 myNormalBorderColor = "#222222"
 myFocusedBorderColor = "#666666"
 
-myXPConfig = def { font = "xft:Monospace:size=8"
+myXPConfig = def { font = "xft:Monospace:size=16"
                  , fgColor = barFgColor
                  , bgColor = barBgColor
-                 , height  = 32
+                 , height  = 48
                  }
 
 -------------------------------------------------------------------------------
 -- Looks --
 -- bar
 
-myDzenOptions = "-h 24 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-14-*-*-*-*-*-*-u'" ++ " -e ''"
+myDzenOptions = "-h 24 -bg '" ++ barBgColor ++ "' -fg '" ++ barFgColor ++ "' -fn '-*-fixed-*-*-*-*-16-*-*-*-*-*-*-u'" ++ " -e ''"
 
 myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
               , ppHidden = dzenColor barFgColor barBgColor . pad
@@ -100,7 +101,7 @@ myPP = dzenPP { ppCurrent = dzenColor barFgColor "#4d4d4d" . pad
     where wrapIcon pic = "^i(" ++ xmonadHome ++ "icons/" ++ pic ++ ")"
 
 -- workspaces
-myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:IRC", "7:mail", "8", "9:music" ]
+myWorkspaces = ["1:main", "2:web", "3:work", "4:im", "5:skype", "6:slack", "7:mail", "8", "9:music" ]
 
 -------------------------------------------------------------------------------
 -- Terminal --
@@ -110,11 +111,11 @@ myLogHook = (dynamicLogWithPP $ myPP) >> fadeInactiveLogHook 0.8
 
 myManageHook = composeAll [
         className =? "stalonetray"      --> doIgnore,
-        className =? "Firefox"          --> doShift "2:web",
+        className =? "firefox"          --> doShift "2:web",
         className =? "jetbrains-idea-ce"--> doShift "3:work",
-        className =? "TelegramDesktop"         --> doShift "4:im",
+        className =? "TelegramDesktop"  --> doShift "4:im",
         className =? "Skype"            --> doShift "5:skype",
-        className =? "Slack"            --> doShift "6:IRC",
+        className =? "Slack"            --> doShift "6:slack",
         className =? "Gimp"             --> doFloat,
         className =? "MPlayer"          --> doFloat,
         isFullscreen                    --> doFullFloat
@@ -124,22 +125,19 @@ myManageHook = composeAll [
 
 --myLayout = ewmhDesktopsLayout . dwmStyle shrinkText myTheme . windowNavigation . avoidStruts . maximize . mkToggle (single ACCORDION) . mkToggle (NOBORDERS ?? FULL ?? EOT) $ onWorkspace "IM" tiledIM (Mirror tiled) ||| onWorkspace "IM" (Mirror tiled) tiledIM
 
-defaultLayouts = smartBorders tiled ||| smartBorders ( Mirror tiled ) ||| noBorders Full
-  where
-       -- default tiling algorithm partitions the screen into two panes
-       tiled   = Tall nmaster delta ratio
 
-       -- The default number of windows in the master pane
-       nmaster = 1
-
-       -- Default proportion of screen occupied by master pane
-       ratio   = 1/2
-
-       -- Percent of screen to increment by when resizing panes
-       delta   = 3/100
-
-myLayout = onWorkspace "4:im" fsLayout $ onWorkspace "5:skype" fsLayout $ defaultLayouts
-    where fsLayout     = noBorders Full
+myLayout = smartBorders . avoidStruts $ perWorkspace
+    where perWorkspace = onWorkspace "4:im" fsLayout $ onWorkspace "5:skype" fsLayout $ onWorkspace "2:web" fsLayout $ defaultLayouts
+          defaultLayouts = tiled ||| (Mirror tiled) ||| noBorders Full
+          fsLayout = noBorders Full ||| tiled ||| (Mirror tiled)
+          -- default tiling algorithm partitions the screen into two panes
+          tiled   = Tall nmaster delta ratio
+          -- The default number of windows in the master pane
+          nmaster = 1
+          -- Default proportion of screen occupied by master pane
+          ratio   = 1/2
+          -- Percent of screen to increment by when resizing panes
+          delta   = 3/100
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -165,7 +163,6 @@ myKeysToAdd =
     , ((myModMask,               xK_r     ), shellPrompt myXPConfig)
     , ((myModMask,               xK_u     ), focusUrgent)
     , ((controlMask .|. altMask, xK_l     ), safeSpawn "xautolock" ["-locknow"])
-    , ((0,                       xK_Print ), spawn "scrot -e 'xclip -selection clipboard -t image/png -i $f && rm $f")
     ]
         where altMask = mod1Mask
 
@@ -173,8 +170,8 @@ myKeysToAdd =
 toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_f)
 
-myStartup = io setWallpaper >>
-            spawn ("compton &") >>
+myStartup = spawn("xrdb -merge " ++ myUserHome ++ ".Xresources") >>
+            io setWallpaper >>
             spawn "xautolock -time 10" >>
             spawn "tinymount --iconTheme=Tango"
 

@@ -16,6 +16,7 @@ return {
       map('n', '<leader>hu', gs.undo_stage_hunk, "Undo stage hunk")
       map('n', '<leader>hp', gs.preview_hunk, "Preview hunk")
       map('n', '<leader>lb', gs.toggle_current_line_blame, "Blame current line")
+      map('n', '<leader>gb', gs.blame, "Git blame")
       map("n", "<leader>hd", gs.diffthis, "Diff this")
     end
   }
